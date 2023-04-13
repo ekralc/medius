@@ -19,3 +19,5 @@ variable "discord_public_key" {
 variable "gcp_region" {
   description = "The GCP region to use"
 }
+
+variable "gcp_project_id" {}

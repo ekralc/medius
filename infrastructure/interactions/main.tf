@@ -1,11 +1,11 @@
 resource "google_cloud_run_service" "interactions_api" {
-  name     = "discord-interactions"
+  name     = var.service_name
   location = var.gcp_region
 
   template {
     spec {
       containers {
-        image = var.interactions_api_image
+        image = var.image_url
 
         env {
           name  = "DISCORD_PUBLIC_KEY"
@@ -23,14 +23,12 @@ resource "google_cloud_run_service" "interactions_api" {
             "cpu" : "1000m"
           }
         }
-
       }
-      container_concurrency = 100
-    }
-  }
 
-  metadata {
-    namespace = "peter-built"
+      container_concurrency = 100
+
+      service_account_name = google_service_account.service_account.email
+    }
   }
 
   traffic {
@@ -54,24 +52,25 @@ resource "google_cloud_run_service_iam_policy" "noauth" {
   service  = google_cloud_run_service.interactions_api.name
 
   policy_data = data.google_iam_policy.noauth.policy_data
+
+  depends_on = [
+    google_cloud_run_service.interactions_api
+  ]
 }
 
+data "google_project" "project" {}
+
 resource "google_cloud_run_domain_mapping" "default" {
-  name     = var.interactions_domain
+  count = (var.domain != null) ? 1 : 0
+
+  name     = var.domain
   location = var.gcp_region
+
+  metadata {
+    namespace = data.google_project.project.project_id
+  }
 
   spec {
     route_name = google_cloud_run_service.interactions_api.name
   }
-
-  metadata {
-    namespace = "peter-built"
-  }
-}
-
-resource "cloudflare_record" "subdomain" {
-  name    = var.interactions_domain
-  type    = "CNAME"
-  value   = "ghs.googlehosted.com"
-  zone_id = var.cloudflare_zone_id
 }

@@ -18,13 +18,13 @@ resource "google_pubsub_subscription" "push_subscription" {
 }
 
 resource "google_cloud_run_service" "transcoder" {
-  name     = "transcoder"
+  name     = var.service_name
   location = var.gcp_region
 
   template {
     spec {
       containers {
-        image = var.transcoder_api_image
+        image = var.image_url
 
         resources {
           limits = {
@@ -34,7 +34,10 @@ resource "google_cloud_run_service" "transcoder" {
         }
 
       }
+
       container_concurrency = 5
+
+      service_account_name = google_service_account.service_account.email
     }
 
     metadata {
