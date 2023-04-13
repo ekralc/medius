@@ -33,20 +33,3 @@ resource "cloudflare_record" "subdomain" {
   value   = "ghs.googlehosted.com"
   zone_id = var.cloudflare_zone_id
 }
-
-module "interactions" {
-  source = "./interactions"
-
-  image_url          = var.interactions_api_image
-  gcp_region         = var.gcp_region
-  discord_public_key = var.discord_public_key
-
-  domain = cloudflare_record.subdomain.name
-}
-
-module "transcoder" {
-  source = "./transcoder"
-
-  image_url  = var.transcoder_api_image
-  gcp_region = var.gcp_region
-}
