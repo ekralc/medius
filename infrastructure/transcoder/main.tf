@@ -12,7 +12,7 @@ resource "google_pubsub_subscription" "push_subscription" {
     push_endpoint = "${google_cloud_run_service.transcoder.status.0.url}/pubsub"
 
     oidc_token {
-      service_account_email = "171111779429-compute@developer.gserviceaccount.com"
+      service_account_email = google_service_account.pubsub_invoker.email
     }
   }
 }
