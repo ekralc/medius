@@ -24,4 +24,4 @@ jobs:
       - id: "list-buckets-contents"
         run: |-
           curl -sSf https://storage.googleapis.com/storage/v1/b/test-bucket-mndghwiq/o \
-            --header "Authorization: Bearer ${{ steps.auth.outputs.access_token }}"
+            --header "Authorization: Bearer ${{ steps.auth.outputs.access_token.value }}"
