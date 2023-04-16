@@ -18,10 +18,11 @@ jobs:
       - id: "auth"
         uses: "google-github-actions/auth@v1"
         with:
+          token_format: "access_token"
           workload_identity_provider: "projects/171111779429/locations/global/workloadIdentityPools/medius-github-wif-pool/providers/github-wif" # this is the output provider_name from the TF module
           service_account: "github-actions@peter-built.iam.gserviceaccount.com" # this is a SA email configured using the TF module with access to YOUR-GCS-BUCKET
 
       - id: "list-buckets-contents"
         run: |-
           curl -sSf https://storage.googleapis.com/storage/v1/b/test-bucket-mndghwiq/o \
-            --header "Authorization: Bearer ${{ steps.auth.outputs.access_token.value }}"
+            --header "Authorization: Bearer ${{ steps.auth.outputs.access_token }}"
