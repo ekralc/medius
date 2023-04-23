@@ -1,3 +1,14 @@
+terraform {
+  backend "gcs" {
+    bucket = "peter-built-terraform"
+    prefix = "dev/secrets"
+  }
+}
+
+provider "google" {
+  project = var.project_id
+}
+
 resource "google_project_service" "secrets_manager" {
   service = "secretmanager.googleapis.com"
 }

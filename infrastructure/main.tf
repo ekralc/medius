@@ -23,7 +23,7 @@ provider "cloudflare" {
 
 data "google_secret_manager_secret_version" "secret_variables" {
   project = var.gcp_project_id
-  secret  = google_secret_manager_secret.cloudflare_api_token.secret_id
+  secret  = "cloudflare_api_token"
   version = "latest"
 }
 
